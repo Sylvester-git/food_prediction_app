@@ -18,6 +18,7 @@ dependencies:
   dio:
   pretty_dio_logger:
   bloc:
+  dartz: 
   get_it:
   flutter_bloc:
   equatable:
