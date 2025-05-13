@@ -1,12 +1,22 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 ThemeData getTheme() {
   return ThemeData(
-    primarySwatch: Colors.blue,
+    scaffoldBackgroundColor: Colors.white,
     brightness: Brightness.light,
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.blue,
-      foregroundColor: Colors.white,
+    colorScheme: ColorScheme(
+      brightness: Brightness.light,
+      primary: Colors.white,
+      onPrimary: Color(0xFFC5CAC8),
+      secondary: Color(0xFF007243),
+      onSecondary: Color(0xFF007243),
+      error: Colors.red,
+      onError: Colors.red,
+      surface: Colors.white,
+      onSurface: Colors.white,
     ),
+    appBarTheme: AppBarTheme(foregroundColor: Colors.white),
   );
 }
