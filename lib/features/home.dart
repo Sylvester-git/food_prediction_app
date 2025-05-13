@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_prediction_app/features/widgets/recommendation_button.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -7,7 +8,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Home Page')),
-      body: Center(child: const Text('Welcome to the Home Page!')),
+      body: Center(child: const RecommendationButton()),
     );
   }
 }
