@@ -15,20 +15,14 @@ class RecommendationButton extends StatefulWidget {
 class _RecommendationButtonState extends State<RecommendationButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
     )..repeat();
-
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.5,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -44,16 +38,13 @@ class _RecommendationButtonState extends State<RecommendationButton>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Pulsing wave effect
+          // Wavy ripple effect
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
               return CustomPaint(
-                painter: SiriWavePainter(
-                  animationValue: _controller.value,
-                  scale: _scaleAnimation.value,
-                ),
-                size: Size(widget.size * 1.5, widget.size * 1.5),
+                painter: SiriWavePainter(animationValue: _controller.value),
+                size: Size(widget.size * 2, widget.size * 2),
               );
             },
           ),
@@ -65,8 +56,8 @@ class _RecommendationButtonState extends State<RecommendationButton>
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  Colors.white.withOpacity(0.9),
-                  Colors.blueAccent.withOpacity(0.7),
+                  Color(0xFFFFB347).withOpacity(0.7),
+                  Color(0xFF00A875).withOpacity(0.9), // Lighter Teal
                 ],
                 stops: const [0.0, 1.0],
               ),
@@ -78,7 +69,11 @@ class _RecommendationButtonState extends State<RecommendationButton>
                 ),
               ],
             ),
-            child: const Icon(Icons.mic, color: Colors.white, size: 30),
+            child: const Icon(
+              Icons.food_bank_rounded,
+              color: Colors.white,
+              size: 30,
+            ),
           ),
         ],
       ),
@@ -88,34 +83,60 @@ class _RecommendationButtonState extends State<RecommendationButton>
 
 class SiriWavePainter extends CustomPainter {
   final double animationValue;
-  final double scale;
 
-  SiriWavePainter({required this.animationValue, required this.scale});
+  SiriWavePainter({required this.animationValue});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..style = PaintingStyle.fill
-          ..shader = SweepGradient(
-            colors: [
-              Colors.blue.withOpacity(0.4),
-              Colors.purple.withOpacity(0.3),
-              Colors.blue.withOpacity(0.4),
-            ],
-            transform: GradientRotation(animationValue * 2 * math.pi),
-          ).createShader(
-            Rect.fromCircle(
-              center: Offset(size.width / 2, size.height / 2),
-              radius: size.width / 2,
-            ),
-          );
+    final center = Offset(size.width / 2, size.height / 2);
+    const waveCount = 3; // Number of concentric waves
+    const maxRadius = 50.0; // Maximum radius of the outermost wave
+    const waveGap = 15.0; // Gap between waves
 
-    canvas.drawCircle(
-      Offset(size.width / 2, size.height / 2),
-      (size.width / 2) * scale,
-      paint,
-    );
+    for (int i = 0; i < waveCount; i++) {
+      final paint =
+          Paint()
+            ..style = PaintingStyle.fill
+            ..shader = SweepGradient(
+              colors: [
+                Color(0xFF007243).withOpacity(0.5 - i * 0.1), // Dark Teal-Green
+                Color(0xFF00A875).withOpacity(0.4 - i * 0.1), // Lighter Teal
+                Color(0xFFFFB347).withOpacity(0.5 - i * 0.1),
+                Color(0xFF007243).withOpacity(0.5 - i * 0.1),
+                // Colors.blue.withOpacity(0.5 - i * 0.1),
+                // Colors.purple.withOpacity(0.4 - i * 0.1),
+                // Colors.blue.withOpacity(0.5 - i * 0.1),
+              ],
+              transform: GradientRotation(animationValue * 2 * math.pi),
+            ).createShader(Rect.fromCircle(center: center, radius: maxRadius));
+
+      final path = Path();
+      final baseRadius = maxRadius - i * waveGap;
+      final points = <Offset>[];
+
+      // Calculate wave points using sine function
+      for (double angle = 0; angle <= 2 * math.pi; angle += 0.05) {
+        final waveAmplitude =
+            5.0 * (1 - i * 0.3); // Decrease amplitude for inner waves
+        final waveOffset =
+            animationValue * 2 * math.pi +
+            i * math.pi / 2; // Phase shift per wave
+        final radius =
+            baseRadius + waveAmplitude * math.sin(4 * angle + waveOffset);
+        final x = center.dx + radius * math.cos(angle);
+        final y = center.dy + radius * math.sin(angle);
+        points.add(Offset(x, y));
+      }
+
+      // Create the wavy path
+      path.moveTo(points[0].dx, points[0].dy);
+      for (int j = 1; j < points.length; j++) {
+        path.lineTo(points[j].dx, points[j].dy);
+      }
+      path.close();
+
+      canvas.drawPath(path, paint);
+    }
   }
 
   @override

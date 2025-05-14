@@ -17,6 +17,6 @@ ThemeData getTheme() {
       surface: Colors.white,
       onSurface: Colors.white,
     ),
-    appBarTheme: AppBarTheme(foregroundColor: Colors.white),
+    appBarTheme: AppBarTheme(foregroundColor: Color(0xFF007243), ),
   );
 }
