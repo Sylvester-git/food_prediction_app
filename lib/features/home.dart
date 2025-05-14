@@ -36,6 +36,8 @@ class HomePage extends StatelessWidget {
                   if (state is GetMealRecommendationInitial) {
                     return Center(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.food_bank_rounded,
