@@ -1,7 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
+
+import '../cubit/get_meal_recommendation_cubit.dart';
 
 class RecommendationButton extends StatefulWidget {
   const RecommendationButton({super.key, this.onPressed, this.size = 60.0});
@@ -33,8 +36,13 @@ class _RecommendationButtonState extends State<RecommendationButton>
 
   @override
   Widget build(BuildContext context) {
+    final getFoodRecommedationCuubit =
+        context.watch<GetMealRecommendationCubit>();
     return GestureDetector(
-      onTap: widget.onPressed,
+      onTap:
+          getFoodRecommedationCuubit.state is GettingMealRecommendation
+              ? null
+              : widget.onPressed,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -54,13 +62,20 @@ class _RecommendationButtonState extends State<RecommendationButton>
             height: widget.size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  Color(0xFFFFB347).withOpacity(0.7),
-                  Color(0xFF00A875).withOpacity(0.9), // Lighter Teal
-                ],
-                stops: const [0.0, 1.0],
-              ),
+              color:
+                  getFoodRecommedationCuubit.state is GettingMealRecommendation
+                      ? Colors.grey.withOpacity(0.5)
+                      : null,
+              gradient:
+                  getFoodRecommedationCuubit.state is GettingMealRecommendation
+                      ? null
+                      : RadialGradient(
+                        colors: [
+                          Color(0xFFFFB347).withOpacity(0.7),
+                          Color(0xFF00A875).withOpacity(0.9), // Lighter Teal
+                        ],
+                        stops: const [0.0, 1.0],
+                      ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.3),
