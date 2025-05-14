@@ -60,7 +60,11 @@ class HomePage extends StatelessWidget {
                       child: Lottie.asset(AssetManager.foodsearching),
                     );
                   } else if (state is ErrorGettingMealRecommendation) {
-                    return Text('Error: ${state.failure.message}');
+                    return Text('Error: ${state.failure.message}', textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                            ),);
                   } else if (state is GottenMealRecommendation) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
