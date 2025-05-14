@@ -77,7 +77,48 @@ jobs:
         continue-on-error: false
         if: success()
 
-      # Step 7: Send APK via email
+        # Step 7: Set up Google Cloud SDK for Drive upload
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CLOUD_CREDENTIALS }}
+        continue-on-error: false
+        if: success()
+
+        # Step 8: Upload APK to Google Drive
+      - name: Upload APK to Google Drive
+        run: |
+          pip install --no-cache-dir pydrive2
+          python3 -c "
+          from pydrive2.auth import GoogleAuth
+          from pydrive2.drive import GoogleDrive
+          import os
+          try:
+              gauth = GoogleAuth()
+              gauth.service_account_file = '/tmp/gcp-credentials.json'
+              gauth.ServiceAuth()
+              drive = GoogleDrive(gauth)
+              file = drive.CreateFile({'title': 'app-release.apk'})
+              file.SetContentFile('build/app/outputs/flutter-apk/app-release.apk')
+              file.Upload()
+              file.InsertPermission({'type': 'anyone', 'value': 'anyone', 'role': 'reader'})
+              link = file['alternateLink']
+              with open('apk_link.txt', 'w') as f:
+                  f.write(link)
+              print('APK uploaded successfully')
+          except Exception as e:
+              print(f'Error uploading to Drive: {str(e)}')
+              exit(1)
+          "
+          if [ ! -f apk_link.txt ]; then
+            echo "Error: Failed to generate APK link"
+            exit 1
+          fi
+        shell: bash
+        continue-on-error: false
+        if: success()
+
+      # Step 9: Send APK via email
       - name: Send APK to emails
         env:
           SMTP_HOST: smtp.gmail.com
