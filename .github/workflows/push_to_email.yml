@@ -53,6 +53,9 @@ jobs:
             echo "Error: BASE_URL secret is not set"
             exit 1
           fi
+          echo "BASE_URL is set to: [REDACTED]"
+          echo "::add-mask::$BASE_URL"
+          echo "Debug: BASE_URL length is ${#BASE_URL}"
           mkdir -p assets
           echo "{\"BASE_URL\": \"$BASE_URL\"}" > assets/env.json
           if [ ! -f assets/env.json ]; then
