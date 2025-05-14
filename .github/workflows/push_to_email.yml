@@ -65,7 +65,16 @@ jobs:
         shell: bash
         continue-on-error: false
         if: success()
-
+        
+      - name: Upload env.json artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: env-json
+          path: assets/env.json
+          retention-days: 1 # Artifact available for 7 days
+        continue-on-error: false
+        if: success()
+        
       # Step 6: Build Flutter APK
       - name: Build Flutter APK
         run: |
