@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:food_prediction_app/features/cubit/get_meal_recommendation_cubit.dart';
 import 'package:food_prediction_app/features/widgets/recommendation_button.dart';
+
+import '../util/assets.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -24,13 +27,26 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             BlocBuilder<GetMealRecommendationCubit, GetMealRecommendationState>(
               builder: (context, state) {
-                if (state is GettingMealRecommendation) {
-                  return const CircularProgressIndicator();
+                if (state is GetMealRecommendationInitial) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(AssetManager.food),
+                        const Text(
+                          'Tap the button to get a meal recommendation',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state is GettingMealRecommendation) {
+                  return const CircularProgressIndicator.adaptive();
                 } else if (state is ErrorGettingMealRecommendation) {
                   return Text('Error: ${state.failure.message}');
                 } else if (state is GottenMealRecommendation) {
                   return Text(
-                    'Recommended Meal: ${state.mealRecommedationModle}',
+                    'Recommended Meal: ${state.mealRecommedationModle.toString()}',
                   );
                 }
                 return const SizedBox.shrink();

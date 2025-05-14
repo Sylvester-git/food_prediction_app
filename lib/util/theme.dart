@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 ThemeData getTheme() {
   return ThemeData(
     scaffoldBackgroundColor: Colors.white,
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: Color(0xFF007243),
+      circularTrackColor: Colors.white,
+      linearTrackColor: Colors.white,
+    ),
     brightness: Brightness.light,
     colorScheme: ColorScheme(
       brightness: Brightness.light,
