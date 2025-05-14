@@ -85,20 +85,35 @@ jobs:
         continue-on-error: false
         if: success()
 
-        # Step 8: Upload APK to Google Drive
+      # Step 8: Upload APK to Google Drive
       - name: Upload APK to Google Drive
+        env:
+          GOOGLE_CLOUD_CREDENTIALS: ${{ secrets.GOOGLE_CLOUD_CREDENTIALS }}
         run: |
           pip install --no-cache-dir pydrive2
+          echo "$GOOGLE_CLOUD_CREDENTIALS" > /tmp/gcp-credentials.json
+          if [ ! -s /tmp/gcp-credentials.json ]; then
+            echo "Error: Google Cloud credentials file is empty or not created"
+            exit 1
+          fi
           python3 -c "
           from pydrive2.auth import GoogleAuth
           from pydrive2.drive import GoogleDrive
           import os
           try:
-              gauth = GoogleAuth()
-              gauth.service_account_file = '/tmp/gcp-credentials.json'
+              settings = {
+                  'client_config_backend': 'service',
+                  'service_config': {
+                      'client_json_file_path': '/tmp/gcp-credentials.json',
+                  }
+              }
+              gauth = GoogleAuth(settings=settings)
               gauth.ServiceAuth()
               drive = GoogleDrive(gauth)
-              file = drive.CreateFile({'title': 'app-release.apk'})
+              file = drive.CreateFile({
+                  'title': 'app-release.apk',
+                  'parents': [{'id': '${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}'}]
+              })
               file.SetContentFile('build/app/outputs/flutter-apk/app-release.apk')
               file.Upload()
               file.InsertPermission({'type': 'anyone', 'value': 'anyone', 'role': 'reader'})
