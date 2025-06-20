@@ -6,7 +6,7 @@ on:
       - master  
 
 jobs:
-  build-and-deploy:
+  Generate-env-json:
     runs-on: ubuntu-latest
     steps:
       # Step 1: Checkout the repository
@@ -17,38 +17,12 @@ jobs:
         continue-on-error: false
         if: success()
 
-      # # Step 2: Set up Java (required for Flutter)
-      # - name: Set up Java
-      #   uses: actions/setup-java@v4
-      #   with:
-      #     distribution: 'temurin'
-      #     java-version: '17'
-      #   continue-on-error: false
-      #   if: success()
-
-      # # Step 3: Set up Flutter
-      # - name: Set up Flutter
-      #   uses: subosito/flutter-action@v2
-      #   with:
-      #     flutter-version: '3.29.0'  # Specify your Flutter version
-      #     channel: stable
-      #   continue-on-error: false
-      #   if: success()
-
-      # # Step 4: Verify Flutter setup
-      # - name: Verify Flutter setup
-      #   run: |
-      #     flutter doctor || { echo "Flutter setup failed"; exit 1; }
-      #   shell: bash
-      #   continue-on-error: false
-      #   if: success()
-
       # Step 5: Create env.json file using baseurl from secrets
-      - name: Generate env.json
+      - name: Generate Enviroment variable
         run: |
           mkdir -p assets
           cat << EOF > assets/env.json 
-          ${{ secrets.ENV_JSON }}
+          ${{ secrets.ENV_JSON}}
           EOF
         shell: bash
         continue-on-error: false
@@ -58,119 +32,26 @@ jobs:
         run: |
           cat assets/env.json
           jq . assets/env.json
-          
+
       - name: Upload env.json as artifatc
         uses: actions/upload-artifact@v4
         with:
           name: env-file
           path: assets/env.json
 
-#       - name: Upload env.json artifact
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: env-json
-#           path: assets/env.json
-#           retention-days: 1 # Artifact available for 7 days
-#         continue-on-error: false
-#         if: success()
-        
-#       # Step 6: Build Flutter APK
-#       - name: Build Flutter APK
-#         run: |
-#           flutter clean || { echo "Flutter clean failed"; exit 1; }
-#           flutter pub get || { echo "Flutter pub get failed"; exit 1; }
-#           flutter build apk --release || { echo "Flutter build failed"; exit 1; }
-#           if [ ! -f build/app/outputs/flutter-apk/app-release.apk ]; then
-#             echo "Error: APK not found"
-#             exit 1
-#           fi
-#         shell: bash
-#         continue-on-error: false
-#         if: success()
+  Generate-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+        continue-on-error: false
+        if: success()
 
-#         # Step 7: Set up Google Cloud SDK for Drive upload
-#       - name: Set up Google Cloud SDK
-#         uses: google-github-actions/auth@v2
-#         with:
-#           credentials_json: ${{ secrets.GOOGLE_CLOUD_CREDENTIALS }}
-#         continue-on-error: false
-#         if: success()
-
-      # Step 8: Upload APK to Google Drive
-#       - name: Upload APK to Google Drive
-#         env:
-#           ENV_JSON:
-#             ${{ secrets.ENV_JSON }}
-#         run: |
-#            echo "$ENV_JSON"
-
-      # # Step 6: Build Flutter APK
-      # - name: Build Flutter APK
-      #   run: |
-      #     flutter clean || { echo "Flutter clean failed"; exit 1; }
-      #     flutter pub get || { echo "Flutter pub get failed"; exit 1; }
-      #     flutter build apk --release || { echo "Flutter build failed"; exit 1; }
-      #     if [ ! -f build/app/outputs/flutter-apk/app-release.apk ]; then
-      #       echo "Error: APK not found"
-      #       exit 1
-      #     fi
-      #   shell: bash
-      #   continue-on-error: false
-      #   if: success()
-
-      #   # Step 7: Set up Google Cloud SDK for Drive upload
-      # - name: Set up Google Cloud SDK
-      #   uses: google-github-actions/auth@v2
-      #   with:
-      #     credentials_json: ${{ secrets.GOOGLE_CLOUD_CREDENTIALS }}
-      #   continue-on-error: false
-      #   if: success()
-
-      # # Step 8: Upload APK to Google Drive
-      # - name: Upload APK to Google Drive
-      #   env:
-      #     GOOGLE_CLOUD_CREDENTIALS: ${{ secrets.GOOGLE_CLOUD_CREDENTIALS }}
-      #   run: |
-      #     pip install --no-cache-dir pydrive2
-      #     echo "$GOOGLE_CLOUD_CREDENTIALS" > /tmp/gcp-credentials.json
-      #     if [ ! -s /tmp/gcp-credentials.json ]; then
-      #       echo "Error: Google Cloud credentials file is empty or not created"
-      #       exit 1
-      #     fi
-      #     python3 -c "
-      #     from pydrive2.auth import GoogleAuth
-      #     from pydrive2.drive import GoogleDrive
-      #     import os
-      #     try:
-      #         settings = {
-      #             'client_config_backend': 'service',
-      #             'service_config': {
-      #                 'client_json_file_path': '/tmp/gcp-credentials.json',
-      #             }
-      #         }
-      #         gauth = GoogleAuth(settings=settings)
-      #         gauth.ServiceAuth()
-      #         drive = GoogleDrive(gauth)
-      #         file = drive.CreateFile({
-      #             'title': 'app-release.apk',
-      #             'parents': [{'id': '${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}'}]
-      #         })
-      #         file.SetContentFile('build/app/outputs/flutter-apk/app-release.apk')
-      #         file.Upload()
-      #         file.InsertPermission({'type': 'anyone', 'value': 'anyone', 'role': 'reader'})
-      #         link = file['alternateLink']
-      #         with open('apk_link.txt', 'w') as f:
-      #             f.write(link)
-      #         print('APK uploaded successfully')
-      #     except Exception as e:
-      #         print(f'Error uploading to Drive: {str(e)}')
-      #         exit(1)
-      #     "
-      #     if [ ! -f apk_link.txt ]; then
-      #       echo "Error: Failed to generate APK link"
-      #       exit 1
-      #     fi
-      #   shell: bash
-      #   continue-on-error: false
-      #   if: success()
-
+      - name: Generate Enviroment variable
+        run: |
+          echo "${{ ENV }}" > .env
+        shell: bash
+        continue-on-error: false
+        if: success()
