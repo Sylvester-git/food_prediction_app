@@ -47,15 +47,18 @@ jobs:
       - name: Generate env.json
         run: |
           mkdir -p assets
-          echo "${{ secrets.ENV_JSON }}" > assets/env.json
-          if [ ! -f assets/env.json ]; then
-            echo "Error: Failed to create env.json"
-            exit 1
-          fi
+          cat << EOF > assets/env.json 
+          ${{ secrets.ENV_JSON }}
+          EOF
         shell: bash
         continue-on-error: false
         if: success()
-
+      
+      - name: Validate env.json
+        run: |
+          cat assets/env.json
+          jq . assets/env.json
+          
       - name: Upload env.json as artifatc
         uses: actions/upload-artifact@v4
         with:
