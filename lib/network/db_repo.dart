@@ -40,7 +40,7 @@ class DatabaseRepoImpl implements DatabaseRepo {
       final response = await _databaseDatasource.getFoodList();
       final foods = response.$1.map((data) => data.convertToFoods()).toList();
       final category =
-          response.$1.map((data) => data.convertCategory()).toList();
+          response.$2.map((data) => data.convertCategory()).toList();
       return right((foods, category));
     } on DioException catch (e) {
       return left(

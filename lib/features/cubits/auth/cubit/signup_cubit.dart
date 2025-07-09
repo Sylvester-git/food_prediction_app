@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:food_prediction_app/features/cubits/auth/cubit/signup_state.dart';
 
 import '../../../../network/auth_repo.dart';
@@ -19,6 +20,22 @@ class SignupCubit extends Cubit<SignupState> {
           success: false,
         ),
       );
+
+  void resetSignUp() {
+    emit(
+      SignupState(
+        email: '',
+        password: '',
+        favFoods: [],
+        isLoading: false,
+        haserror: false,
+        errormessage: '',
+        success: false,
+      ),
+    );
+  }
+
+  final signupform1key = GlobalKey<FormState>();
   void changeSignUpEmail({required String email}) {
     emit(state.copyWith(email: email));
   }
@@ -30,6 +47,13 @@ class SignupCubit extends Cubit<SignupState> {
   void addToFavFoodList({required String foodID}) {
     final list = List<String>.from(state.favFoods);
     list.add(foodID);
+    emit(state.copyWith(favFoods: list));
+    log(state.favFoods.toString());
+  }
+
+  void removeToFavFoodList({required String foodID}) {
+    final list = List<String>.from(state.favFoods);
+    list.remove(foodID);
     emit(state.copyWith(favFoods: list));
     log(state.favFoods.toString());
   }

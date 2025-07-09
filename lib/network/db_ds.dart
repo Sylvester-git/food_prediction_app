@@ -21,7 +21,7 @@ class DatabaseDatasourceImpl implements DatabaseDatasource {
       if (response.statusCode == 200) {
         final data = response.data['recommendations'];
         if (data != null) {
-          return data;
+          return (data as List).cast<Map<String, dynamic>>();
         } else {
           throw Exception("No rcommendations found");
         }

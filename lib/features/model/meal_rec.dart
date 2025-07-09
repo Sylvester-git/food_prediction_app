@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class MealRecommendation extends Equatable {
   final String type;
-  final List<String> items;
+  final List items;
 
   const MealRecommendation({required this.type, required this.items});
 

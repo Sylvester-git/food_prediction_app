@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_prediction_app/app/dependency_inj.dart';
 import 'package:food_prediction_app/features/auth/login.dart';
-import 'package:food_prediction_app/features/home_screen.dart';
+import 'package:food_prediction_app/features/home.dart';
 import 'package:food_prediction_app/util/storage.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return HomeScreen();
+              return HomePage();
             },
           ),
         );
@@ -48,13 +48,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF00A875).withOpacity(0.9),
       body: Center(
         child: Text(
           "Food app",
           style: Theme.of(
             context,
-          ).textTheme.titleLarge!.copyWith(color: Colors.black),
+          ).textTheme.titleLarge!.copyWith(color: Colors.white, fontSize: 48),
         ),
       ),
     );
