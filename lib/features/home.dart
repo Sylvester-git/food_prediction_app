@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Flavor Forecast',
+          'ChowChoice',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         actions: [
