@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Color(0xFF00A875).withOpacity(0.9),
       body: Center(
         child: Text(
-          "Flavour Forcast",
+          "ChowChoice",
           style: Theme.of(
             context,
           ).textTheme.titleLarge!.copyWith(color: Colors.white, fontSize: 48),
