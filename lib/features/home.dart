@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_prediction_app/app/dependency_inj.dart';
+import 'package:food_prediction_app/features/auth/login.dart';
 import 'package:food_prediction_app/features/cubits/recommendation/get_meal_recommendation_cubit.dart';
 import 'package:food_prediction_app/features/widgets/recommendation_button.dart';
 import 'package:food_prediction_app/features/widgets/recommendation_card.dart';
+import 'package:food_prediction_app/util/storage.dart';
 import 'package:lottie/lottie.dart';
 
 import '../util/assets.dart';
@@ -18,6 +21,22 @@ class HomePage extends StatelessWidget {
           'Flavor Forecast',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await instance<Storage>().clearData();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return LoginScreen();
+                  },
+                ),
+              );
+            },
+            child: Text('LogOut', style: TextStyle(color: Colors.red)),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
