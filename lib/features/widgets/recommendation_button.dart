@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
 
-import '../cubit/get_meal_recommendation_cubit.dart';
+import '../cubits/recommendation/get_meal_recommendation_cubit.dart';
 
 class RecommendationButton extends StatefulWidget {
   const RecommendationButton({super.key, this.onPressed, this.size = 60.0});

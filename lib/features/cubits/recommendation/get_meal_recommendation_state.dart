@@ -21,7 +21,7 @@ class ErrorGettingMealRecommendation extends GetMealRecommendationState {
 }
 
 class GottenMealRecommendation extends GetMealRecommendationState {
-  final MealRecommedationModle mealRecommedationModle;
+  final List<MealRecommendation> mealRecommedationModle;
 
   const GottenMealRecommendation({required this.mealRecommedationModle});
 

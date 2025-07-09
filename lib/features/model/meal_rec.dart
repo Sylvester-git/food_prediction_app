@@ -1,22 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-class MealRecommedationModle extends Equatable {
-  final String mptfd;
-  final String mps;
-  final String mptm;
-  final String mpsw;
-  final String mpdk;
-  final String mpft;
+class MealRecommendation extends Equatable {
+  final String type;
+  final List<String> items;
 
-  const MealRecommedationModle({
-    required this.mptfd,
-    required this.mps,
-    required this.mptm,
-    required this.mpsw,
-    required this.mpdk,
-    required this.mpft,
-  });
+  const MealRecommendation({required this.type, required this.items});
 
   @override
-  List<Object?> get props => [mptfd, mps, mptm, mpsw, mpdk, mpft];
+  List<Object?> get props => [type, items];
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_prediction_app/app/provider.dart';
-import 'package:food_prediction_app/features/home.dart';
+import 'package:food_prediction_app/features/splash_screen.dart';
 import 'package:food_prediction_app/util/theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return getProviders(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        home: SplashScreen(),
         theme: getTheme(),
       ),
     );

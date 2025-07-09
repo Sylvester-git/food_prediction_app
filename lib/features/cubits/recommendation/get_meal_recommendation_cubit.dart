@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:food_prediction_app/features/model/meal_rec.dart';
 import 'package:food_prediction_app/network/db_repo.dart' show DatabaseRepo;
 import 'package:food_prediction_app/network/fail.dart';
-import 'dart:math';
 
 part 'get_meal_recommendation_state.dart';
 
@@ -13,9 +12,8 @@ class GetMealRecommendationCubit extends Cubit<GetMealRecommendationState> {
     : super(GetMealRecommendationInitial());
 
   Future<void> getMealRecommedation() async {
-    final userID = Random().nextInt(9000);
     emit(GettingMealRecommendation());
-    final res = await _databaseRepo.getMealRecommendation(userID: userID);
+    final res = await _databaseRepo.getMealRecommendation();
     res.fold(
       (l) {
         emit(ErrorGettingMealRecommendation(failure: l));

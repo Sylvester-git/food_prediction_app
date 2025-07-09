@@ -18,7 +18,9 @@ dependencies:
   dio:
   pretty_dio_logger:
   bloc:
+  path_provider: 
   dartz: 
+  hive_flutter: 
   flutter_svg: 
   lottie: 
   get_it:

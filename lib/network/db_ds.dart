@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:food_prediction_app/network/api.dart';
 
 abstract class DatabaseDatasource {
-  Future<Map<String, dynamic>> getMealRecommendation({required int userID});
+  Future<List<Map<String, dynamic>>> getMealRecommendation();
+  Future<(List<Map<String, dynamic>>, List<Map<String, dynamic>>)>
+  getFoodList();
 }
 
 class DatabaseDatasourceImpl implements DatabaseDatasource {
@@ -12,12 +14,10 @@ class DatabaseDatasourceImpl implements DatabaseDatasource {
   final Api _Api = Api();
 
   @override
-  Future<Map<String, dynamic>> getMealRecommendation({
-    required int userID,
-  }) async {
+  Future<List<Map<String, dynamic>>> getMealRecommendation() async {
     try {
       final dio = await _Api.getDio();
-      final response = await dio.get('/recommend/$userID');
+      final response = await dio.get('/recommend');
       if (response.statusCode == 200) {
         final data = response.data['recommendations'];
         if (data != null) {
@@ -27,6 +27,27 @@ class DatabaseDatasourceImpl implements DatabaseDatasource {
         }
       } else {
         throw Exception("Failed to fetch recommendations");
+      }
+    } on DioException catch (e, s) {
+      log("Stacktrace $s");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<(List<Map<String, dynamic>>, List<Map<String, dynamic>>)>
+  getFoodList() async {
+    try {
+      final dio = await _Api.getDio();
+      final res = await dio.get("/foods");
+      if (res.statusCode == 200) {
+        final fooddata =
+            (res.data['foods'] as List).cast<Map<String, dynamic>>();
+        final categorydata =
+            (res.data['categories'] as List).cast<Map<String, dynamic>>();
+        return (fooddata, categorydata);
+      } else {
+        throw Exception("Failed to fetch foods");
       }
     } on DioException catch (e, s) {
       log("Stacktrace $s");
